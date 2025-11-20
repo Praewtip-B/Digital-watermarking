@@ -32,12 +32,22 @@ def embed_watermark(host_path, secret_path, output_path):
         if total_bits_needed > total_bits_available:
             # Calculate scale factor
             bits_for_pixels = total_bits_available - 64  # Subtracting 64 bits for the header
+            
+            # Check for absolute host size limit (less than 88 bits total == too small) 
+            if bits_for_pixels < 24: # Need at least 24 bits for one 1x1 pixel payload
+                 messagebox.showerror(
+                    "Fatal Error: Host Too Small",
+                    f"The host image capacity is only {total_bits_available} bits. "
+                    f"A minimum of 88 bits (header + 1 pixel) is required for embedding."
+                )
+                 return # Stop execution
+            
             max_pixels = bits_for_pixels // (3 * 8)
             scale = math.sqrt(max_pixels / (secret_w * secret_h))
             new_w = max(1, int(secret_w * scale))
             new_h = max(1, int(secret_h * scale))
 
-            # Warning message for the user ---
+            # Warning message for the user 
             messagebox.showwarning(
                 "Warning: Secret Image Too Large",
                 f"The secret image ({secret_w}x{secret_h}) is too large for the host image.\n"
@@ -56,6 +66,17 @@ def embed_watermark(host_path, secret_path, output_path):
                 pixels_bytes += bytes(pixel)
             data_to_hide = header + pixels_bytes
             total_bits_needed = len(data_to_hide) * 8
+
+        # Post-scaling/Initial Fatal Capacity Check 
+        # Check if the host is too small to fit the minimum data (width * height * 3 < 88 bits)
+        # and prevents partial, corrupted embedding.
+        if total_bits_needed > total_bits_available:
+             messagebox.showerror(
+                "Fatal Error: Host Too Small",
+                f"The host image is too small to embed the secret data. "
+                f"Available capacity: {total_bits_available} bits, but {total_bits_needed} bits are required."
+            )
+             return # Stop execution
 
         # Convert data (header + pixels) to a binary bit stream
         bit_stream = ''.join(format(byte, '08b') for byte in data_to_hide)
