@@ -52,7 +52,7 @@ Step 2: Select the Secret Image (the watermark).
 
 Step 3: Choose the output location and name for the final watermarked image (must be saved as a .png file).
 
-*A Success message will confirm the embedding.*
+***A Success message will confirm the embedding.***
 
 ### Capacity Handling Notes:
 - If the secret image is too large, the program will display a Warning and automatically scale the secret image down to fit.
@@ -66,4 +66,4 @@ Step 1: Select the Watermarked Image (the PNG file containing the hidden data).
 
 Step 2: Choose the output location and name for the extracted secret image.
 
-*A Success message will confirm the extraction, and the original (or scaled) secret image will be saved.*
+***A Success message will confirm the extraction, and the original (or scaled) secret image will be saved.***
