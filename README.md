@@ -26,7 +26,7 @@ pip install Pillow
 
 ### ▶️ How to Run the Application
 
-1.  Save the Python code (e.g., watermark_tool.py).
+1.  Save the provided Python code (watermark.py).
 
 2.  Open your terminal or command prompt.
 
