@@ -1,6 +1,6 @@
-Test Cases Explanation
+**Test Cases Explanation**
 
-1) Normal Case
+**1) Normal Case**
 - Host: cat.jpg
 - Secret: ict.jpg
 
@@ -12,7 +12,7 @@ Embed → cat.jpg → ict.jpg → hidden1.png
 Extract → hidden1.png → reveal1.png
 -------------------------------------------------------------------------------
 
-2) Secret Image Too Large
+**2) Secret Image Too Large**
 - Host: cat.jpg
 - Secret: mu.jpg
 
@@ -23,7 +23,7 @@ Steps:
 Embed → cat.jpg → mu.jpg → hidden2.png
 -------------------------------------------------------------------------------
 
-3) Host Image Too Small
+**3) Host Image Too Small**
 - Host: small_cat.png
 - Secret: ict.jpg
 
@@ -33,3 +33,4 @@ Embed → cat.jpg → mu.jpg → hidden2.png
 Steps:
 Embed → small_cat.png → ict.jpg
 -------------------------------------------------------------------------------
+
