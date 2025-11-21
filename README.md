@@ -1,13 +1,12 @@
 # 📖 Digital Watermarking Tool (LSB Algorithm)
 
-### Group 19
-
 This project implements a digital watermarking application using the **Least Significant Bit (LSB) steganography algorithm**. The tool is built with Python and utilizes the LSBs of a host image to conceal a secret image.
 
 The application includes robust capacity handling, automatically resizing the secret image if it's too large, or throwing a fatal error if the host image is physically too small to prevent data corruption.
 
 ### Note
-For instruction on how to utilize the test cases provided, please read the ***"Test Cases Explanation.txt"***
+- For instruction on how to utilize the test cases provided, please read the ***"Test Cases Explanation.txt"***
+- If the instructions provided are still not clear enough, please take a look at the ***"DigitalWatermark_Demo.mp4"***
 
 ---
 
