@@ -7,7 +7,7 @@ This project implements a digital watermarking application using the **Least Sig
 The application includes robust capacity handling, automatically resizing the secret image if it's too large, or throwing a fatal error if the host image is physically too small to prevent data corruption.
 
 ### Note
-For instruction on how to utilize the test cases provided, please read the _"Test Cases Explanation.txt"_
+For instruction on how to utilize the test cases provided, please read the ***"Test Cases Explanation.txt"***
 
 ---
 
