@@ -15,7 +15,9 @@ def embed_watermark(host_path, secret_path, output_path):
         secret_pixels = list(secret_img.getdata())
 
         # Storing the secret img size using 'struct.pack'
-        # '>II' means big-endian, two unsigned integers (32 bits each = 64 bits total)
+        # As we need to remember the size of the secret image to rebuild it later
+        # '>II' means big-endian, two unsigned integers 
+        # 32 bits each = 64 bits total -> 8 bytes (4 for width, 4 for height)
         header = struct.pack('>II', secret_w, secret_h)
 
         # Convert secret pixels to bytes
@@ -23,8 +25,10 @@ def embed_watermark(host_path, secret_path, output_path):
         for pixel in secret_pixels:
             pixels_bytes += bytes(pixel)
 
+        # Final data we need to hide: [header] + [all secret pixel bytes]
         data_to_hide = header + pixels_bytes
 
+        # Capacity calculation & checks
         total_bits_needed = len(data_to_hide) * 8
         total_bits_available = host_img.width * host_img.height * 3
         
@@ -33,8 +37,10 @@ def embed_watermark(host_path, secret_path, output_path):
             # Calculate scale factor
             bits_for_pixels = total_bits_available - 64  # Subtracting 64 bits for the header
             
-            # Check for absolute host size limit (less than 88 bits total == too small) 
-            if bits_for_pixels < 24: # Need at least 24 bits for one 1x1 pixel payload
+            # Check for absolute host size limit 
+            # Check if the host is too small to fit the minimum data (width * height * 3 < 88 bits)
+            # and prevents partial, corrupted embedding.
+            if bits_for_pixels < 24: # Need at least 24 bits (3 bytes) for one 1x1 pixel payload
                  messagebox.showerror(
                     "Fatal Error: Host Too Small",
                     f"The host image capacity is only {total_bits_available} bits. "
@@ -42,7 +48,9 @@ def embed_watermark(host_path, secret_path, output_path):
                 )
                  return # Stop execution
             
-            max_pixels = bits_for_pixels // (3 * 8)
+            max_pixels = bits_for_pixels // (3 * 8) # Each pixel needs 3 bytes (24 bits)
+
+            # Calculate new dimensions while maintaining aspect ratio
             scale = math.sqrt(max_pixels / (secret_w * secret_h))
             new_w = max(1, int(secret_w * scale))
             new_h = max(1, int(secret_h * scale))
@@ -55,7 +63,7 @@ def embed_watermark(host_path, secret_path, output_path):
             )
             
             # Resize and recalculate data
-            secret_img = secret_img.resize((new_w, new_h), Image.LANCZOS)
+            secret_img = secret_img.resize((new_w, new_h), Image.LANCZOS) # High quality resample
             secret_w, secret_h = new_w, new_h
             secret_pixels = list(secret_img.getdata())
 
@@ -67,9 +75,7 @@ def embed_watermark(host_path, secret_path, output_path):
             data_to_hide = header + pixels_bytes
             total_bits_needed = len(data_to_hide) * 8
 
-        # Post-scaling/Initial Fatal Capacity Check 
-        # Check if the host is too small to fit the minimum data (width * height * 3 < 88 bits)
-        # and prevents partial, corrupted embedding.
+        # Post-scaling / Final Capacity Check 
         if total_bits_needed > total_bits_available:
              messagebox.showerror(
                 "Fatal Error: Host Too Small",
@@ -109,7 +115,7 @@ def embed_watermark(host_path, secret_path, output_path):
                 
             new_pixels.append((r, g, b))
 
-        # Save the steganographic image
+        # Save the image
         new_img = Image.new('RGB', host_img.size)
         new_img.putdata(new_pixels)
         new_img.save(output_path)
@@ -134,7 +140,7 @@ def extract_watermark(modified_path, output_path):
         if len(bit_stream) < 64:
             raise ValueError("Not enough data to extract the header (minimum 64 bits needed).")
 
-        # 2. Extract and unpack the 64-bit header (Width and Height)
+        # 2. Extract and unpack the 64-bit header (width and height)
         header_bits = bit_stream[:64]
         
         # Convert the 64 header bits back into a byte string (8 bytes)
@@ -145,8 +151,9 @@ def extract_watermark(modified_path, output_path):
         ])
 
         # Use struct.unpack to correctly read the two unsigned integers
+        # And get back the original width and height of the secret image
         width, height = struct.unpack('>II', header_bytes)
-
+        
         pixels_bits = bit_stream[64:]
         pixels_bits_needed = width * height * 24
 
