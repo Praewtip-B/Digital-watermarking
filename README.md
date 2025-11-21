@@ -41,7 +41,7 @@ python watermark.py
 A desktop GUI window titled "Digital Watermarking" will open.
 
 ### 🛠 Usage Instructions
-***1. Embedding a Secret Image***
+**1. Embedding a Secret Image -**
 Click the "Embed secret image into host image" button.
 
 Step 1: Select the Host Image (the carrier). PNG format is recommended.
@@ -57,7 +57,7 @@ Step 3: Choose the output location and name for the final watermarked image (mus
 
 - If the host image is too small to even contain the minimum 88 bits of data, a Fatal Error will be displayed, and the process will stop to prevent file corruption.
 
-***2. Extracting the Secret Image***
+**2. Extracting the Secret Image -**
 Click the "Extract secret image from watermarked image" button.
 
 Step 1: Select the Watermarked Image (the PNG file containing the hidden data).
