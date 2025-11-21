@@ -22,6 +22,7 @@ You can install the required dependency (Pillow) via pip:
 
 ```bash
 pip install Pillow
+```
 
 ### ▶️ How to Run the Application
 
@@ -35,6 +36,7 @@ pip install Pillow
 
 ```bash
 python watermark.py
+```
 
 A desktop GUI window titled "Digital Watermarking" will open.
 
